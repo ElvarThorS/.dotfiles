@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Apply theme-aware Starship config on theme change.
+# Omarchy passes the snake-cased theme name as $1.
+
+set -euo pipefail
+
+THEME_NAME="${1:-}"
+STARSHIP_DIR="$HOME/.config/omarchy/starship"
+TARGET="$HOME/.config/starship.toml"
+CURRENT_THEME_DIR="$HOME/.config/omarchy/current/theme"
+GTK3_TARGET="$HOME/.config/gtk-3.0/gtk.css"
+GTK4_TARGET="$HOME/.config/gtk-4.0/gtk.css"
+
+if [[ -z "$THEME_NAME" ]]; then
+  exit 0
+fi
+
+THEME_FILE="$STARSHIP_DIR/${THEME_NAME}.toml"
+DEFAULT_FILE="$STARSHIP_DIR/default.toml"
+
+if [[ -f "$THEME_FILE" ]]; then
+  ln -sf "$THEME_FILE" "$TARGET"
+elif [[ -f "$DEFAULT_FILE" ]]; then
+  ln -sf "$DEFAULT_FILE" "$TARGET"
+fi
+
+if [[ -f "$CURRENT_THEME_DIR/gtk-3.0.css" ]]; then
+  cp -f "$CURRENT_THEME_DIR/gtk-3.0.css" "$GTK3_TARGET"
+fi
+
+if [[ -f "$CURRENT_THEME_DIR/gtk-4.0.css" ]]; then
+  cp -f "$CURRENT_THEME_DIR/gtk-4.0.css" "$GTK4_TARGET"
+fi
+
+# Restart Nautilus if running so GTK changes apply
+if pgrep -x nautilus >/dev/null; then
+  nautilus -q
+fi

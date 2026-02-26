@@ -2,28 +2,34 @@
   "reload_style_on_change": true,
   "layer": "top",
   "position": "top",
-  "spacing": 0,
-  "height": 26,
+  "spacing": 10,
+  "height": 36,
+  "all-outputs": true,
   "blur": true,
   "gtk-layer-shell": true,
-  "modules-left": ["custom/omarchy", "hyprland/workspaces"],
+  "modules-left": ["custom/omarchy", "hyprland/workspaces", "hyprland/window"],
   "modules-center": [
     "clock",
+    "group/media",
     "custom/update",
     "custom/voxtype",
     "custom/screenrecording-indicator",
   ],
   "modules-right": [
-    "custom/update",
-    "custom/voxtype",
-    "custom/screenrecording-indicator",
-    "group/tray-expander",
-    "bluetooth",
-    "network",
-    "pulseaudio",
+    "group/connectivity",
     "group/system",
+    "group/tray-expander",
     "battery",
   ],
+  "group/connectivity": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 250,
+      "children-class": "net-group-item",
+      "click-to-reveal": false,
+    },
+    "modules": ["custom/net-icon", "network", "bluetooth", "pulseaudio"],
+  },
   "group/system": {
     "orientation": "inherit",
     "drawer": {
@@ -31,11 +37,51 @@
       "children-class": "sys-group-item",
       "click-to-reveal": false,
     },
-    "modules": ["custom/sys-icon", "cpu", "memory", "temperature"],
+    "modules": ["custom/sys-icon", "cpu", "memory", "temperature", "disk"],
+  },
+  "group/media": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 250,
+      "children-class": "media-group-item",
+      "click-to-reveal": false,
+    },
+    "modules": ["custom/media-icon", "custom/media-prev", "custom/media-play", "custom/media-next", "mpris"],
+  },
+  "custom/net-icon": {
+    "format": "󰈀",
+    "tooltip": false,
   },
   "custom/sys-icon": {
     "format": "󰒋",
     "tooltip": false,
+  },
+  "custom/media-icon": {
+    "format": "󰝚",
+    "tooltip": false,
+  },
+  "custom/media-prev": {
+    "exec": "bash /home/elvar/.config/waybar/scripts/media-prev.sh",
+    "interval": 2,
+    "tooltip": false,
+    "on-click": "playerctl previous",
+  },
+  "custom/media-play": {
+    "exec": "bash /home/elvar/.config/waybar/scripts/media-play.sh",
+    "interval": 1,
+    "tooltip": false,
+    "on-click": "playerctl play-pause",
+  },
+  "custom/media-next": {
+    "exec": "bash /home/elvar/.config/waybar/scripts/media-next.sh",
+    "interval": 2,
+    "tooltip": false,
+    "on-click": "playerctl next",
+  },
+  "hyprland/window": {
+    "max-length": 45,
+    "separate-outputs": false,
+    "tooltip": true,
   },
   "hyprland/workspaces": {
     "on-click": "activate",
@@ -88,6 +134,12 @@
     "format": "󰘚 {percentage}%",
     "tooltip": true,
   },
+  "disk": {
+    "interval": 30,
+    "format": "󰋊 {percentage_used}%",
+    "path": "/",
+    "tooltip": true,
+  },
 
   "temperature": {
     "interval": 3,
@@ -99,6 +151,18 @@
     "format-alt": "{:L%d %B W%V %Y}",
     "tooltip": false,
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select",
+  },
+  "mpris": {
+    "format": "{player_icon} {artist} — {title}",
+    "format-paused": "{player_icon} {artist} — {title}",
+    "format-stopped": "",
+    "max-length": 40,
+    "player-icons": {
+      "default": "󰎆",
+    },
+    "status-icons": {
+      "paused": "󰏤",
+    },
   },
   "network": {
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
