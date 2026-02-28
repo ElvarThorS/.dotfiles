@@ -27,6 +27,7 @@ Cache/
 Code\ Cache/
 GPUCache/
 fcitx5/.config/fcitx5/conf/*.conf_*
+fcitx5/.config/fcitx5/conf/cached_layouts
 
 omarchy/.config/omarchy/themes/black_arch/
 omarchy/.config/omarchy/themes/harbordark/
