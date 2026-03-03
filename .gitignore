@@ -29,12 +29,10 @@ GPUCache/
 fcitx5/.config/fcitx5/conf/*.conf_*
 fcitx5/.config/fcitx5/conf/cached_layouts
 
-omarchy/.config/omarchy/themes/black_arch/
-omarchy/.config/omarchy/themes/harbordark/
-omarchy/.config/omarchy/themes/pink-blood-omarchy/
-
 # Omarchy generated theme outputs
 omarchy/.config/omarchy/current/
+# Ignore embedded git metadata in imported themes
+omarchy/.config/omarchy/themes/**/.git/
 gtk-3.0/.config/gtk-3.0/gtk.css
 gtk-4.0/.config/gtk-4.0/gtk.css
 
