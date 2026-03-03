@@ -10,8 +10,19 @@ source ~/.local/share/omarchy/default/bash/rc
 # Make an alias for invoking commands you use constantly
 # alias p='python'
 
+unalias c 2>/dev/null
+c() {
+  systemd-run --user --pty \
+    -p MemoryHigh=8G \
+    -p MemoryMax=12G \
+    -p MemorySwapMax=0 \
+    -p CPUQuota=300% \
+    -- opencode "$@"
+}
+
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - bash)"
 export PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+alias alacarchy='bash <(curl -fsSL https://raw.githubusercontent.com/DanielCoffey1/a-la-carchy/master/a-la-carchy.sh)'
