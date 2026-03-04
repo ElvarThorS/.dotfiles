@@ -28,9 +28,8 @@ Important: `omadot` is not preinstalled on Omarchy by default, so install it fir
 # Install omadot
 curl -fsSL https://raw.githubusercontent.com/tomhayes/omadot/main/install.sh | bash
 
-# Install GNU Stow
-sudo pacman -S stow  # Arch
-sudo apt install stow  # Debian/Ubuntu
+# Install GNU Stow (Omarchy/Arch)
+sudo pacman -S stow
 ```
 
 ### Usage
