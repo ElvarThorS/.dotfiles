@@ -280,11 +280,13 @@ git push
 ```bash
 cd ~/.dotfiles
 
-# If you have local WIP, commit or stash it first.
+# If repo is clean, this is enough:
 git status
-
-# Rebase keeps history linear and avoids merge commits.
 git pull --rebase --autostash
+
+# If repo is dirty (especially with untracked files/symlinks), use:
+# git stash push -u -m "pre-sync $(date +%Y%m%d-%H%M%S)"
+# git pull --rebase
 
 packages=(
   autostart
@@ -312,9 +314,39 @@ omarchy-restart-waybar
 hyprctl reload || true
 ```
 
+### Dirty repo contingency (safe fallback)
+
+Use this when machine B has local edits, untracked files, or stow-managed symlink churn and pull fails.
+
+```bash
+cd ~/.dotfiles
+git status --short
+
+# 1) Save absolutely everything, including untracked files
+git stash push -u -m "pre-sync $(date +%Y%m%d-%H%M%S)"
+
+# 2) Sync from remote with linear history
+git pull --rebase
+
+# 3) Reapply links and runtime-generated outputs
+packages=(autostart bashrc fastfetch fcitx5 ghostty git gtk-3.0 gtk-4.0 hypr mako nvim omarchy tmux waybar)
+stow -R -v -d "$HOME/.dotfiles" -t "$HOME" "${packages[@]}"
+omarchy-theme-set "<theme-name>"
+omarchy-restart-waybar
+hyprctl reload || true
+
+# 4) Optional: bring back your stashed local WIP
+git stash list
+# git stash pop
+```
+
+If `git stash pop` introduces conflicts, resolve them in repo files, then run `stow -R` again.
+If rebase stops on conflicts, resolve files and continue with `git rebase --continue` (or abort with `git rebase --abort`).
+
 ### Practical rules to avoid headaches
 
 - Always `git pull --rebase --autostash` before starting new edits on a machine.
+- If untracked files block pull, use `git stash push -u` before pulling.
 - Avoid editing the same file on both machines before syncing.
 - Commit small, focused changes and push often.
 - If pull reports conflicts, resolve them in repo files, then run `stow -R` again.
@@ -325,4 +357,5 @@ hyprctl reload || true
 - Avoid `stow --adopt` for normal bootstrap; it moves target files into your repo package trees.
 - `omadot put --all` is convenient for routine use, but explicit `stow -n`/`stow -R` is better when validating conflicts.
 - `~/.config/starship.toml` is intentionally not stowed; Omarchy theme hooks manage it.
+- `hypr/.config/hypr/monitors.conf` is intentionally untracked for per-machine display layouts.
 - If you ever see `source is an absolute symlink` from stow, update your clone (`git pull`) and re-run preflight.

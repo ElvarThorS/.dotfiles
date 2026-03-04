@@ -31,6 +31,8 @@ fcitx5/.config/fcitx5/conf/cached_layouts
 
 # Omarchy generated theme outputs
 omarchy/.config/omarchy/current/
+# Per-machine monitor layout
+hypr/.config/hypr/monitors.conf
 # Ignore embedded git metadata in imported themes
 omarchy/.config/omarchy/themes/**/.git/
 gtk-3.0/.config/gtk-3.0/gtk.css
