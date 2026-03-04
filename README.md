@@ -261,6 +261,64 @@ omarchy-theme-set "<theme-name>"
 omarchy-restart-waybar
 ```
 
+## Recommended Sync Workflow (Two Machines)
+
+Use one machine as the source of truth at any moment, then fast-forward the other.
+
+### On machine A (where you made changes)
+
+```bash
+cd ~/.dotfiles
+git status
+git add <files>
+git commit -m "Describe why the change was made"
+git push
+```
+
+### On machine B (the other machine)
+
+```bash
+cd ~/.dotfiles
+
+# If you have local WIP, commit or stash it first.
+git status
+
+# Rebase keeps history linear and avoids merge commits.
+git pull --rebase --autostash
+
+packages=(
+  autostart
+  bashrc
+  fastfetch
+  fcitx5
+  ghostty
+  git
+  gtk-3.0
+  gtk-4.0
+  hypr
+  mako
+  nvim
+  omarchy
+  tmux
+  waybar
+)
+
+# Reapply links and prune stale ones after pulling changes.
+stow -R -v -d "$HOME/.dotfiles" -t "$HOME" "${packages[@]}"
+
+# Rebuild Omarchy-generated outputs if themes/config changed.
+omarchy-theme-set "<theme-name>"
+omarchy-restart-waybar
+hyprctl reload || true
+```
+
+### Practical rules to avoid headaches
+
+- Always `git pull --rebase --autostash` before starting new edits on a machine.
+- Avoid editing the same file on both machines before syncing.
+- Commit small, focused changes and push often.
+- If pull reports conflicts, resolve them in repo files, then run `stow -R` again.
+
 ## Notes
 
 - Stow is conflict-safe by default: if it finds conflicts, it aborts without partial changes.
