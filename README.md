@@ -113,6 +113,9 @@ packages=(
 # 4. Preflight conflict check (no filesystem changes)
 stow -n -v -d "$HOME/.dotfiles" -t "$HOME" "${packages[@]}"
 
+# On first run, conflict warnings are expected because Omarchy already generated
+# many real files in ~/.config. We back those up in the next step.
+
 # 5. Backup conflicting pre-generated Omarchy configs
 backup="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$backup"
@@ -145,19 +148,48 @@ done
 
 echo "Backups stored in: $backup"
 
-# 6. Apply stow links
+# 6. Re-run preflight; this should now be mostly LINK lines
+stow -n -v -d "$HOME/.dotfiles" -t "$HOME" "${packages[@]}"
+
+# 7. Apply stow links
 stow -v -d "$HOME/.dotfiles" -t "$HOME" "${packages[@]}"
 
-# 7. Initialize Omarchy-generated theme outputs
+# 8. Initialize Omarchy-generated theme outputs
 omarchy-theme-set "<theme-name>"
 
-# 8. Restart components that need it
+# 9. Restart components that need it
 omarchy-restart-waybar
 hyprctl reload || true
 
-# 9. Optional integrity checks
+# 10. Optional integrity checks
 chkstow --target="$HOME" --badlinks
 # chkstow --target="$HOME" --aliens
+```
+
+## Post-Install Verification
+
+Run this after setup on a new machine to confirm core links and tools are healthy:
+
+```bash
+test -L "$HOME/.config/hypr" && echo "hypr: OK"
+test -L "$HOME/.config/waybar" && echo "waybar: OK"
+test -L "$HOME/.config/omarchy" && echo "omarchy: OK"
+test -L "$HOME/.config/nvim" && echo "nvim: OK"
+test -L "$HOME/.config/mako" && echo "mako: OK"
+test -L "$HOME/.config/starship.toml" && echo "starship: OK"
+
+omarchy-theme-current
+omarchy-theme-set "<theme-name>"
+omarchy-restart-waybar
+
+nvim --headless "+q"
+tmux -V
+ghostty --version
+
+# Manual checks
+# 1) Lock screen: omarchy-lock-screen
+# 2) Waybar visible after restart
+# 3) Open terminal + Neovim to confirm theme and keymaps
 ```
 
 ## Updating on Existing Machine
@@ -197,3 +229,4 @@ omarchy-restart-waybar
 - Stow is conflict-safe by default: if it finds conflicts, it aborts without partial changes.
 - Avoid `stow --adopt` for normal bootstrap; it moves target files into your repo package trees.
 - `omadot put --all` is convenient for routine use, but explicit `stow -n`/`stow -R` is better when validating conflicts.
+- If you ever see `source is an absolute symlink` from stow, update your clone (`git pull`) and re-run preflight.
