@@ -11,7 +11,6 @@ My dotfiles repository for synchronizing and versioning my Linux desktop configu
 - Mako - Notification daemon
 - Fcitx5 - Input method framework
 - Git - Configuration
-- Tmux - Terminal multiplexer
 - Starship - Shell prompt (managed by Omarchy theme hooks)
 - Omarchy - Theming system for Hyprland
 - Autostart entries and shell defaults
@@ -145,7 +144,6 @@ packages=(
   mako
   nvim
   omarchy
-  tmux
   waybar
 )
 
@@ -172,7 +170,6 @@ conflicts=(
   ".config/mako"
   ".config/nvim"
   ".config/omarchy"
-  ".config/tmux"
   ".config/waybar"
 )
 
@@ -249,7 +246,6 @@ packages=(
   mako
   nvim
   omarchy
-  tmux
   waybar
 )
 
@@ -301,7 +297,6 @@ packages=(
   mako
   nvim
   omarchy
-  tmux
   waybar
 )
 
@@ -329,7 +324,7 @@ git stash push -u -m "pre-sync $(date +%Y%m%d-%H%M%S)"
 git pull --rebase
 
 # 3) Reapply links and runtime-generated outputs
-packages=(autostart bashrc fastfetch fcitx5 ghostty git gtk-3.0 gtk-4.0 hypr mako nvim omarchy tmux waybar)
+packages=(autostart bashrc fastfetch fcitx5 ghostty git gtk-3.0 gtk-4.0 hypr mako nvim omarchy waybar)
 stow -R -v -d "$HOME/.dotfiles" -t "$HOME" "${packages[@]}"
 omarchy-theme-set "<theme-name>"
 omarchy-restart-waybar
