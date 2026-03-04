@@ -12,7 +12,7 @@ My dotfiles repository for synchronizing and versioning my Linux desktop configu
 - Fcitx5 - Input method framework
 - Git - Configuration
 - Tmux - Terminal multiplexer
-- Starship - Shell prompt
+- Starship - Shell prompt (managed by Omarchy theme hooks)
 - Omarchy - Theming system for Hyprland
 - Autostart entries and shell defaults
 
@@ -105,7 +105,6 @@ packages=(
   mako
   nvim
   omarchy
-  starship.toml
   tmux
   waybar
 )
@@ -133,7 +132,6 @@ conflicts=(
   ".config/mako"
   ".config/nvim"
   ".config/omarchy"
-  ".config/starship.toml"
   ".config/tmux"
   ".config/waybar"
 )
@@ -160,10 +158,6 @@ omarchy-theme-set "<theme-name>"
 # 9. Restart components that need it
 omarchy-restart-waybar
 hyprctl reload || true
-
-# 10. Optional integrity checks
-chkstow --target="$HOME" --badlinks
-# chkstow --target="$HOME" --aliens
 ```
 
 ## Post-Install Verification
@@ -176,7 +170,7 @@ test -L "$HOME/.config/waybar" && echo "waybar: OK"
 test -L "$HOME/.config/omarchy" && echo "omarchy: OK"
 test -L "$HOME/.config/nvim" && echo "nvim: OK"
 test -L "$HOME/.config/mako" && echo "mako: OK"
-test -L "$HOME/.config/starship.toml" && echo "starship: OK"
+test -e "$HOME/.config/starship.toml" && echo "starship file: OK"
 
 omarchy-theme-current
 omarchy-theme-set "<theme-name>"
@@ -185,6 +179,10 @@ omarchy-restart-waybar
 nvim --headless "+q"
 tmux -V
 ghostty --version
+
+# Stow integrity checks
+chkstow --target="$HOME" --badlinks
+# chkstow --target="$HOME" --aliens
 
 # Manual checks
 # 1) Lock screen: omarchy-lock-screen
@@ -211,7 +209,6 @@ packages=(
   mako
   nvim
   omarchy
-  starship.toml
   tmux
   waybar
 )
@@ -229,4 +226,5 @@ omarchy-restart-waybar
 - Stow is conflict-safe by default: if it finds conflicts, it aborts without partial changes.
 - Avoid `stow --adopt` for normal bootstrap; it moves target files into your repo package trees.
 - `omadot put --all` is convenient for routine use, but explicit `stow -n`/`stow -R` is better when validating conflicts.
+- `~/.config/starship.toml` is intentionally not stowed; Omarchy theme hooks manage it.
 - If you ever see `source is an absolute symlink` from stow, update your clone (`git pull`) and re-run preflight.
