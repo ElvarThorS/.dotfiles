@@ -78,6 +78,46 @@ When stowed, omadot creates symlinks: ~/.config/hypr -> ~/.dotfiles/hypr/.config
 - Theme-specific overrides in individual app configs
 - Hyprland bindings and settings that extend omarchy defaults
 
+## Theme Manager Plus (Optional)
+
+[Theme Manager Plus](https://github.com/OldJobobo/theme-manager-plus) is a CLI/TUI that works with Omarchy and can switch:
+
+- Omarchy theme
+- Waybar theme
+- Walker theme
+- Hyprlock theme
+- Starship theme or preset
+
+### Install (new machine)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/OldJobobo/theme-manager-plus/master/install.sh | bash
+source ~/.profile
+theme-manager version
+```
+
+Pin to a known version (example: same as this setup):
+
+```bash
+THEME_MANAGER_VERSION=0.3.3 \
+  curl -fsSL https://raw.githubusercontent.com/OldJobobo/theme-manager-plus/master/install.sh | bash
+```
+
+### Quick usage
+
+```bash
+theme-manager browse
+theme-manager set "<theme-name>" -w -k --hyprlock
+theme-manager print-config
+```
+
+### Notes
+
+- `theme-manager` installs to `~/.local/bin/theme-manager`.
+- It is intentionally not managed by stow in this repo.
+- It may update files/symlinks under `~/.config/waybar`, `~/.config/walker`, `~/.config/hypr/themes/hyprlock`, and `~/.config/starship.toml`.
+- Those updates are expected when using Theme Manager Plus with Omarchy.
+
 ## Installation on New Machine (Conflict-Safe)
 
 ```bash
