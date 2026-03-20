@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=RGBPC Restore
+Comment=Restore RGB lighting at login
+Exec=rgbpc --restore-last
+Terminal=false
+X-GNOME-Autostart-enabled=true

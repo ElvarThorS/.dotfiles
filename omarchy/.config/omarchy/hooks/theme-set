@@ -37,3 +37,7 @@ fi
 if pgrep -x nautilus >/dev/null; then
   nautilus -q
 fi
+
+# >>> rgbpc sync hook >>>
+rgbpc --sync-theme &
+# <<< rgbpc sync hook <<<
